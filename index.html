@@ -2,159 +2,247 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ZeiMaeiii Shop</title>
   <style>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: #0b2033;
+      background: #071428;
       color: #fff;
-      text-align: center;
     }
     header {
-      background: #071428;
+      background: #0b2033;
       padding: 15px;
-      font-size: 24px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
       color: pink;
     }
-    .page { display: none; padding: 20px; }
-    .active { display: block; }
-    button {
-      padding: 10px 20px;
-      margin: 10px;
-      border: none;
-      border-radius: 8px;
-      background: pink;
-      color: #071428;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    .account {
-      background: #132c47;
-      margin: 10px auto;
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      background: #111e2c;
       padding: 10px;
-      border-radius: 8px;
-      width: 250px;
     }
-    #wheel {
+    nav button {
+      background: pink;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    nav button:hover {
+      background: #ff7ab8;
+    }
+    .container {
+      padding: 20px;
+      display: none;
+    }
+    .active {
+      display: block;
+    }
+    input, select {
+      padding: 8px;
+      border-radius: 5px;
+      border: none;
+      margin: 5px 0;
+      width: 200px;
+    }
+    .btn {
+      background: pink;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .btn:hover { background: #ff7ab8; }
+
+    /* acc cards */
+    .acc-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+    .card {
+      background: #0b2033;
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    /* vòng quay */
+    .wheel {
       width: 250px;
       height: 250px;
       border-radius: 50%;
-      border: 5px solid pink;
+      border: 10px solid pink;
+      position: relative;
       margin: 20px auto;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
+      overflow: hidden;
+    }
+    .wheel div {
+      width: 50%;
+      height: 50%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform-origin: 0% 0%;
+      background: rgba(255,192,203,0.6);
+      border: 1px solid #fff;
+    }
+    #spinBtn {
+      display: block;
+      margin: 20px auto;
+      padding: 10px 20px;
       font-weight: bold;
-      transition: transform 4s ease-out;
+      border: none;
+      background: pink;
+      border-radius: 10px;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
 
-<header>ZeiMaeiii Shop</header>
+<header>ZeiMaeiii Shop 🌸</header>
+<nav>
+  <button onclick="showPage('home')">🏠 Trang chủ</button>
+  <button onclick="showPage('login')">🔑 Đăng nhập</button>
+  <button onclick="showPage('topup')">💳 Nạp tiền</button>
+  <button onclick="showPage('shop')">🛒 Chọn Acc</button>
+  <button onclick="showPage('wheel')">🎡 Vòng quay</button>
+</nav>
 
-<!-- Đăng nhập -->
-<div id="login" class="page active">
-  <h2>Đăng nhập</h2>
-  <input type="text" id="username" placeholder="Nhập tên..." />
-  <br>
-  <button onclick="login()">Vào shop</button>
+<div id="home" class="container active">
+  <h2>Chào mừng đến với shop 🌸</h2>
+  <p>Bạn có thể đăng nhập, nạp tiền, mua acc và chơi vòng quay may mắn.</p>
+  <p><b>Số dư:</b> <span id="balance">0</span> VNĐ</p>
 </div>
 
-<!-- Trang chính -->
-<div id="main" class="page">
-  <h2>Xin chào <span id="userDisplay"></span>!</h2>
-  <p>Số dư: <span id="balance">0</span> xu</p>
-  <button onclick="showPage('nap')">Nạp tiền</button>
-  <button onclick="showPage('shop')">Chọn acc</button>
-  <button onclick="showPage('vongquay')">Vòng quay may mắn</button>
+<div id="login" class="container">
+  <h2>Đăng nhập / Đăng ký</h2>
+  <input id="username" placeholder="Tên đăng nhập"><br>
+  <input id="password" type="password" placeholder="Mật khẩu"><br>
+  <button class="btn" onclick="register()">Đăng ký</button>
+  <button class="btn" onclick="login()">Đăng nhập</button>
+  <p id="loginMsg"></p>
 </div>
 
-<!-- Nạp tiền -->
-<div id="nap" class="page">
+<div id="topup" class="container">
   <h2>Nạp tiền</h2>
-  <button onclick="nap(100)">+100 xu</button>
-  <button onclick="nap(500)">+500 xu</button>
-  <button onclick="nap(1000)">+1000 xu</button>
-  <br><br>
-  <button onclick="showPage('main')">Quay lại</button>
+  <input id="amount" type="number" placeholder="Nhập số tiền"><br>
+  <button class="btn" onclick="topUp()">Nạp ngay</button>
 </div>
 
-<!-- Shop acc -->
-<div id="shop" class="page">
-  <h2>Shop Acc</h2>
-  <div class="account">
-    Acc Basic - 200 xu <br>
-    <button onclick="buy(200,'Acc Basic')">Mua</button>
-  </div>
-  <div class="account">
-    Acc VIP - 500 xu <br>
-    <button onclick="buy(500,'Acc VIP')">Mua</button>
-  </div>
-  <button onclick="showPage('main')">Quay lại</button>
+<div id="shop" class="container">
+  <h2>Danh sách Acc</h2>
+  <div class="acc-list" id="accList"></div>
 </div>
 
-<!-- Vòng quay -->
-<div id="vongquay" class="page">
-  <h2>Vòng quay may mắn</h2>
-  <div id="wheel">?</div>
-  <button onclick="spin()">Quay</button>
-  <br>
-  <button onclick="showPage('main')">Quay lại</button>
+<div id="wheel" class="container">
+  <h2>Vòng quay may mắn 🎡</h2>
+  <div class="wheel" id="wheel"></div>
+  <button id="spinBtn" onclick="spinWheel()">Quay</button>
+  <p id="prizeMsg"></p>
 </div>
 
 <script>
-  let balance = 0;
-  let user = "";
-
+  // ===== NAVIGATION =====
   function showPage(id) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.container').forEach(c => c.classList.remove('active'));
     document.getElementById(id).classList.add('active');
-    document.getElementById("balance").innerText = balance;
+    updateBalance();
   }
 
+  // ===== ACCOUNT SYSTEM =====
+  let currentUser = null;
+  function register() {
+    let u = username.value, p = password.value;
+    if (!u || !p) return alert("Nhập đủ thông tin!");
+    if (localStorage.getItem("user_"+u)) return alert("User đã tồn tại!");
+    localStorage.setItem("user_"+u, JSON.stringify({pass:p, balance:0}));
+    alert("Đăng ký thành công!");
+  }
   function login() {
-    const name = document.getElementById("username").value;
-    if (!name) { alert("Nhập tên trước!"); return; }
-    user = name;
-    document.getElementById("userDisplay").innerText = user;
-    showPage('main');
+    let u = username.value, p = password.value;
+    let data = localStorage.getItem("user_"+u);
+    if (!data) return alert("User không tồn tại!");
+    let obj = JSON.parse(data);
+    if (obj.pass !== p) return alert("Sai mật khẩu!");
+    currentUser = u;
+    loginMsg.innerText = "Đăng nhập thành công! Xin chào " + u;
+    updateBalance();
   }
 
-  function nap(amount) {
-    balance += amount;
-    alert("Bạn đã nạp " + amount + " xu!");
-    showPage('main');
-  }
-
-  function buy(cost, name) {
-    if (balance >= cost) {
-      balance -= cost;
-      alert("Mua thành công: " + name);
-    } else {
-      alert("Không đủ xu!");
+  function updateBalance() {
+    if (currentUser) {
+      let obj = JSON.parse(localStorage.getItem("user_"+currentUser));
+      document.getElementById("balance").innerText = obj.balance;
     }
-    showPage('main');
   }
 
-  function spin() {
-    let wheel = document.getElementById("wheel");
-    let prizes = ["100 xu", "200 xu", "500 xu", "Chúc bạn may mắn lần sau"];
-    let random = Math.floor(Math.random() * prizes.length);
-    wheel.style.transform = "rotate(" + (720 + random*90) + "deg)";
-    setTimeout(() => {
-      let prize = prizes[random];
-      if (prize.includes("xu")) {
-        let amount = parseInt(prize);
-        balance += amount;
-        alert("Bạn trúng " + prize + "!");
-      } else {
-        alert(prize);
-      }
-      showPage('main');
-    }, 4000);
+  // ===== TOP UP =====
+  function topUp() {
+    if (!currentUser) return alert("Hãy đăng nhập!");
+    let amt = parseInt(amount.value);
+    if (isNaN(amt) || amt <= 0) return alert("Số tiền không hợp lệ!");
+    let obj = JSON.parse(localStorage.getItem("user_"+currentUser));
+    obj.balance += amt;
+    localStorage.setItem("user_"+currentUser, JSON.stringify(obj));
+    alert("Nạp thành công!");
+    updateBalance();
+  }
+
+  // ===== SHOP ACC =====
+  let accs = [
+    {id:1, name:"Acc Roblox #1", price:10000},
+    {id:2, name:"Acc Roblox #2", price:20000},
+    {id:3, name:"Acc Minecraft #1", price:30000},
+  ];
+  function loadAccs() {
+    let list = document.getElementById("accList");
+    list.innerHTML = "";
+    accs.forEach(acc=>{
+      let div = document.createElement("div");
+      div.className="card";
+      div.innerHTML = `<h3>${acc.name}</h3>
+                       <p>Giá: ${acc.price} VNĐ</p>
+                       <button class="btn" onclick="buyAcc(${acc.id})">Mua</button>`;
+      list.appendChild(div);
+    });
+  }
+  function buyAcc(id) {
+    if (!currentUser) return alert("Hãy đăng nhập!");
+    let acc = accs.find(a=>a.id==id);
+    let obj = JSON.parse(localStorage.getItem("user_"+currentUser));
+    if (obj.balance < acc.price) return alert("Không đủ tiền!");
+    obj.balance -= acc.price;
+    localStorage.setItem("user_"+currentUser, JSON.stringify(obj));
+    alert("Mua thành công: " + acc.name);
+    updateBalance();
+  }
+  loadAccs();
+
+  // ===== WHEEL =====
+  let prizes = ["+1000 VNĐ", "Mất 500 VNĐ", "Acc Free", "Không trúng", "+2000 VNĐ"];
+  function spinWheel() {
+    if (!currentUser) return alert("Hãy đăng nhập!");
+    let result = prizes[Math.floor(Math.random()*prizes.length)];
+    prizeMsg.innerText = "Bạn trúng: " + result;
+    let obj = JSON.parse(localStorage.getItem("user_"+currentUser));
+    if (result.includes("+")) {
+      obj.balance += parseInt(result.replace(/\D/g,""));
+    } else if (result.includes("Mất")) {
+      obj.balance -= parseInt(result.replace(/\D/g,""));
+      if (obj.balance < 0) obj.balance = 0;
+    }
+    localStorage.setItem("user_"+currentUser, JSON.stringify(obj));
+    updateBalance();
   }
 </script>
 
